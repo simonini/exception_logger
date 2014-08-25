@@ -3,6 +3,18 @@ require "exception_logger/engine"
 require "will_paginate"
 require 'ipaddr'
 
+
+
+
+class MailErrore < ActionMailer::Base
+  def send(to, body)
+    mail(to: to,
+         body: body,
+         content_type: "text/html",
+         subject: "Already rendered!")
+  end
+end
+
 module ExceptionLogger
   # Copyright (c) 2005 Jamis Buck
   #
@@ -63,29 +75,11 @@ module ExceptionLogger
       when Proc   then deliverer.call(self)
       end
 
-
-      mail = Mail.new do
-        to: 'descovi@gmail.com',
-        body: 'errore sulla app vai a vedere',
-        content_type:'text/html',
-        subject:'cazzo')
-      #mail.delivery_method :sendmail
       m = MailErrore.new
       m.send("descovi@gmail.com", "ciao sono una bella mail")
       logged = LoggedException.create_from_exception(self, exception, data)
       logged
-      end
+
     end
-  end
-end
-
-
-
-class MailErrore < ActionMailer::Base
-  def send(to, body)
-    mail(to: to,
-         body: body,
-         content_type: "text/html",
-         subject: "Already rendered!")
   end
 end
