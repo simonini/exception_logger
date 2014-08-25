@@ -10,8 +10,6 @@ class MailErrore < ActionMailer::Base
 
   def segnala(to, body)
     mail(
-        from: "cicciobello@mail.it",
-        to: to,
          body: body,
          content_type: "text/html",
          subject: "Already rendered!")
