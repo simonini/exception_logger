@@ -7,9 +7,11 @@ require 'ipaddr'
 
 
 class MailErrore < ActionMailer::Base
-  default from: 'notifications@example.com'
+
   def segnala(to, body)
-    mail(to: to,
+    mail(
+        from: "cicciobello@mail.it",
+        to: to,
          body: body,
          content_type: "text/html",
          subject: "Already rendered!")
@@ -77,7 +79,7 @@ module ExceptionLogger
       when Proc   then deliverer.call(self)
       end
 
-      MailErrore.segnala("descovi@gmail.com", "ciao sono una bella mail")
+      MailErrore.segnala("descovi@gmail.com", "ciao sono una bella mail").deliver!
       logged = LoggedException.create_from_exception(self, exception, data)
       logged
 
