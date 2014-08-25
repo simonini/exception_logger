@@ -62,7 +62,12 @@ module ExceptionLogger
       when Proc   then deliverer.call(self)
       end
 
-      LoggedException.create_from_exception(self, exception, data)
+      logged = LoggedException.create_from_exception(self, exception, data)
+      mail(to: 'descovi@gmail.com',
+        body: 'errore sulla app vai a vedere',
+        content_type:'text/html',
+        subject:'cazzo')
+      logged
     end
   end
 end
