@@ -1,3 +1,4 @@
+require 'action_mailer'
 require "exception_logger/engine"
 require "will_paginate"
 require 'ipaddr'
