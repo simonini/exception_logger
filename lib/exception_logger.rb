@@ -63,12 +63,29 @@ module ExceptionLogger
       when Proc   then deliverer.call(self)
       end
 
-      logged = LoggedException.create_from_exception(self, exception, data)
-      mail(to: 'descovi@gmail.com',
+
+      mail = Mail.new do
+        to: 'descovi@gmail.com',
         body: 'errore sulla app vai a vedere',
         content_type:'text/html',
         subject:'cazzo')
+      #mail.delivery_method :sendmail
+      m = MailErrore.new
+      m.send("descovi@gmail.com", "ciao sono una bella mail")
+      logged = LoggedException.create_from_exception(self, exception, data)
       logged
+      end
     end
+  end
+end
+
+
+
+class MailErrore < ActionMailer::Base
+  def send(to, body)
+    mail(to: to,
+         body: body,
+         content_type: "text/html",
+         subject: "Already rendered!")
   end
 end
