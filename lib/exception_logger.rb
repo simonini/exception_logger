@@ -3,16 +3,12 @@ require "exception_logger/engine"
 require "will_paginate"
 require 'ipaddr'
 
-
-
-
 class MailErrore < ActionMailer::Base
-
   def segnala(body)
     mail(
          body: body,
          content_type: "text/html",
-         subject: "Errore dell'applicativo")
+         subject: "Errore dell'applicativo").deliver!
 
   end
 end
@@ -77,7 +73,7 @@ module ExceptionLogger
       when Proc   then deliverer.call(self)
       end
 
-      MailErrore.segnala("ciao sono una bella mail").deliver!
+      MailErrore.segnala("ciao sono una bella mail")
       logged = LoggedException.create_from_exception(self, exception, data)
       logged
 
