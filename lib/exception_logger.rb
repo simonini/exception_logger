@@ -4,11 +4,11 @@ require "will_paginate"
 require 'ipaddr'
 
 class MailErrore < ActionMailer::Base
-  def segnala(body)
-    mail(
-         body: body,
+  def segnala(body, subject)
+    mail(body: body,
          content_type: "text/html",
-         subject: "Errore dell'applicativo").deliver!
+         subject: "Application Error! url: #{subject}")
+    .deliver!
 
   end
 end
@@ -68,13 +68,16 @@ module ExceptionLogger
     def log_exception(exception)
       deliverer = self.class.exception_data
       data = case deliverer
-      when nil    then {}
-      when Symbol then send(deliverer)
-      when Proc   then deliverer.call(self)
+       when nil    then {}
+        when Symbol then send(deliverer)
+        when Proc   then deliverer.call(self)
       end
 
-      MailErrore.segnala("ciao sono una bella mail")
       logged = LoggedException.create_from_exception(self, exception, data)
+      MailErrore.segnala(
+        "classe: "+logged[:exception_class] +" <br/> message: "+logged[:message],
+        self.request.url
+      )
       logged
 
     end
